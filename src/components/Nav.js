@@ -10,6 +10,9 @@ import {
     Icon
   } from 'semantic-ui-react'
 
+  import Storage from '../utils/Storage';
+  import Auth from '../utils/Auth';
+
   const FixedMenu = () => (
     <Menu fixed='top' size='large'>
         <Container>
@@ -18,9 +21,9 @@ import {
             <Menu.Item as='a'> Prosiding </Menu.Item>
             <Menu.Item as='a'> Profil </Menu.Item>
             <Menu.Menu position='right'>
-            <Menu.Item className='item'>
-                <NavLink exact to='/login'> <Button >  Log in </Button> </NavLink>
-            </Menu.Item>
+            {/* <Menu.Item className='item'>
+                <NavLink exact to='/login' > <Button >  Login </Button> </NavLink>
+            </Menu.Item> */}
             </Menu.Menu>
         </Container>
     </Menu>
@@ -30,10 +33,20 @@ import {
           
 class Nav extends Component {
 
-    state = {}
+    constructor (props) {
+        super(props);
+        this.state = { visible:false };
+        this.handleLogout = this.handleLogout.bind(this);
+    }
+
 
     hideFixedMenu = () => this.setState({ visible: false })
     showFixedMenu = () => this.setState({ visible: true })
+    
+    handleLogout = () => {
+        Storage.clearData();
+        this.props.history.push('/login');
+    }
 
     render() {
         const { visible } = this.state;
@@ -59,10 +72,11 @@ class Nav extends Component {
                                     <Menu.Item as='a'>Profil</Menu.Item>
                                     <Menu.Item as='a'>Laporan</Menu.Item>
                                     <Menu.Item position='right'>
-                                        <NavLink exact to='/login'>
-                                            <Button  inverted> <Icon name='unlock alternate' />  &nbsp; Log in   </Button> 
+                                        {/* <NavLink exact to={ this.props.status } >
+                                            <Button  inverted style={{ 'text-transform': 'capitalize' }}> <Icon name='unlock alternate' />  &nbsp; { this.props.status }   </Button> 
                                             
-                                        </NavLink>
+                                        </NavLink> */}
+                                    { (Auth.session()) ?  <NavLink exact to='/login' onClick={this.handleLogout} > <Button  inverted > <Icon name='unlock alternate' />  &nbsp; Logout   </Button> </NavLink> : <NavLink exact to='/login' > <Button  inverted > <Icon name='unlock alternate' />  &nbsp; Login   </Button> </NavLink>   }
                                     {/* <Button as='a' inverted style={{ marginLeft: '0.5em' }}>Sign Up</Button> */}
                                     </Menu.Item>
                                 </Menu>
@@ -81,10 +95,10 @@ class Nav extends Component {
                                     inverted
                                     style={{ fontSize: '1em', fontWeight: 'normal' }}
                                 />
-                                <Button primary size='huge'>
+                                {/* <Button primary size='huge'>
                                     Get Started
                                     <Icon name='right arrow' />
-                                </Button>
+                                </Button> */}
                                 </Container>
                             </Segment>
                             </Visibility>
